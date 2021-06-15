@@ -29,28 +29,58 @@ app.use(session({
 }))
 
 app.get("/", (req, res) => {
-    res.send(`
-        <h1>Eyo Wassup</h1>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
+    const { userId } = req.session;
 
-        <a href="/home">Home</a>
-        <form method="post" action="/logout">
-            <button></button>
-        </form>
+    // edit thisVVV
+    // do this tomorrow when ur brain can understand
+
+    res.send(`
+        <h1>Welcome!</h1>
+        ${userId ? `
+            <a href='/home'>Home</a>
+            <form method="post" action="/logout">
+                <button>Logout</button>
+            </form>
+        ` : `
+            <a href="/login">Login</a>
+            <a href="/register">Login</a>
+        `}
     `)
 })
 
 app.get("/home", (req, res) => {
-    
+    res.send(`
+        <h1>Home</h1>
+        <a href="/">Main</a>
+
+        <ul>
+            <li>Name: </li>
+            <li>Email: </li>
+        </ul>
+    `);
 })
 
 app.get("/login", (req, res) => {
-
+    res.send(`
+        <h1>Login</h1>
+        <form method="POST" action="/login">
+            <input type="email" name="email" placeholder="Email" required />
+            <input type="password" name="password" placeholder="Password" required />
+            <button type="submit"/>
+        </form>
+    `);
 })
 
 app.get("/register", (req, res) => {
-    
+    res.send(`
+        <h1>Register</h1>
+        <form method="POST" action="/register">
+            <input name="name" placeholder="Name" required />
+            <input type="email" name="email" placeholder="Email" required />
+            <input type="password" name="password" placeholder="Password" required />
+            <button type="submit"/>
+        </form>
+    `);
 })
 
 app.post("/login", (req, res) => {
