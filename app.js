@@ -46,6 +46,7 @@ app.get("/", (req, res) => {
 
     // edit thisVVV
     // do this tomorrow when ur brain can understand
+    // test this mf
 
     res.send(`
         <h1>Welcome!</h1>
@@ -56,7 +57,7 @@ app.get("/", (req, res) => {
             </form>
         ` : `
             <a href="/login">Login</a>
-            <a href="/register">Login</a>
+            <a href="/register">Register</a>
         `}
     `)
 })
@@ -79,7 +80,7 @@ app.get("/login", (req, res) => {
         <form method="POST" action="/login">
             <input type="email" name="email" placeholder="Email" required />
             <input type="password" name="password" placeholder="Password" required />
-            <button type="submit"/>
+            <button type="submit">Submit</button>
         </form>
         <a href="/register">Register</a>
     `);
@@ -92,7 +93,7 @@ app.get("/register", (req, res) => {
             <input name="name" placeholder="Name" required />
             <input type="email" name="email" placeholder="Email" required />
             <input type="password" name="password" placeholder="Password" required />
-            <button type="submit"/>
+            <button type="submit">Submit</button>
         </form>
         <a href="/login">Login</a>
     `);
