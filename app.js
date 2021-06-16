@@ -1,5 +1,6 @@
 const express = require("express");
 const session = require("express-session");
+const bodyParser = require("body-parser");
 
 const TWO_HOURS = 1000 * 60 * 60 * 2;
 
@@ -15,6 +16,10 @@ const IN_PROD = NODE_ENV === 'production';
 
 const app = express();
 
+app.use(bodyParser.urlencoded({
+    extended: true
+}))
+
 // test this
 app.use(session({
    name: SESSION_NAME,
@@ -27,6 +32,14 @@ app.use(session({
        secure: IN_PROD
    } 
 }))
+
+const redirectLogin = (req, res, next) => {
+    if(!req.session.userId){
+        res.redirect("/login");
+    } else {
+        next();
+    }
+}
 
 app.get("/", (req, res) => {
     const { userId } = req.session;
@@ -48,7 +61,7 @@ app.get("/", (req, res) => {
     `)
 })
 
-app.get("/home", (req, res) => {
+app.get("/home", redirectLogin, (req, res) => {
     res.send(`
         <h1>Home</h1>
         <a href="/">Main</a>
@@ -68,6 +81,7 @@ app.get("/login", (req, res) => {
             <input type="password" name="password" placeholder="Password" required />
             <button type="submit"/>
         </form>
+        <a href="/register">Register</a>
     `);
 })
 
@@ -80,6 +94,7 @@ app.get("/register", (req, res) => {
             <input type="password" name="password" placeholder="Password" required />
             <button type="submit"/>
         </form>
+        <a href="/login">Login</a>
     `);
 })
 
@@ -91,7 +106,7 @@ app.post("/register", (req, res) => {
     
 })
 
-app.get("/logout", (req, res) => {
+app.get("/logout", redirectLogin, (req, res) => {
     
 })
 app.listen(PORT, () => {
