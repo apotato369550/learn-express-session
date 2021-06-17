@@ -41,6 +41,14 @@ const redirectLogin = (req, res, next) => {
     }
 }
 
+const redirectHome = (req, res, next) => {
+    if(req.session.userId) {
+        res.redirect("/login");
+    } else {
+        next();
+    }
+}
+
 app.get("/", (req, res) => {
     const { userId } = req.session;
 
@@ -99,11 +107,11 @@ app.get("/register", (req, res) => {
     `);
 })
 
-app.post("/login", (req, res) => {
+app.post("/login", redirectHome, (req, res) => {
 
 })
 
-app.post("/register", (req, res) => {
+app.post("/register", redirectHome, (req, res) => {
     
 })
 
