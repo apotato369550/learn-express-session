@@ -14,6 +14,16 @@ const {
 
 const IN_PROD = NODE_ENV === 'production';
 
+// create users array variable here
+// do this tomorrow
+// wire to database
+// hash passwords
+const users = [
+    { id: 1, name: 'Alex', email: 'alex@gmail.com', password: 'secret'},
+    { id: 2, name: 'Max', email: 'max@gmail.com', password: 'secret'},
+    { id: 3, name: 'Hagard', email: 'hagard@gmail.com', password: 'secret'}
+]
+
 const app = express();
 
 app.use(bodyParser.urlencoded({
@@ -43,11 +53,12 @@ const redirectLogin = (req, res, next) => {
 
 const redirectHome = (req, res, next) => {
     if(req.session.userId) {
-        res.redirect("/login");
+        res.redirect("/home");
     } else {
         next();
     }
 }
+
 
 app.get("/", (req, res) => {
     const { userId } = req.session;
@@ -108,15 +119,57 @@ app.get("/register", (req, res) => {
 })
 
 app.post("/login", redirectHome, (req, res) => {
+    const { email, password } = req.body;
 
+    if(email && password){
+        const user = users.find(
+            user => user.email === email && user.password === pasword
+        )
+
+        if(user){
+            req.session.userId = user.id;
+        }
+    }
+
+    res.redirect('/login')
 })
 
 app.post("/register", redirectHome, (req, res) => {
-    
+    const {name, email, password} = req.body;
+
+    if(name && email && password){
+        const exists = user.some(
+            user => user.email === email
+        )
+
+        if(!exists) {
+            const user = {
+                id: users.length + 1,
+                name,
+                email,
+                password
+            }
+
+            users.push(user);
+            req.session.userId = user.id;
+            return res.redirect("/home");
+        }
+    }
+    // continue here
+    // almost throughj
+    res.redirect("/register");
 })
 
 app.get("/logout", redirectLogin, (req, res) => {
-    
+    res.session.destroy(err => {
+        if(err){
+            return res.redirect("/home");
+        }
+        
+        res.clearCookie(SESSION_NAME);
+        res.redirect("/login")
+    })
+
 })
 app.listen(PORT, () => {
     console.log("Server hosted at: " + "http://localhost:" + PORT);
