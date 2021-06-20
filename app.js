@@ -59,6 +59,15 @@ const redirectHome = (req, res, next) => {
     }
 }
 
+app.use((req, res, next) => {
+    const { userId } = req.session
+    if(userId){
+        res.locals.user = users.find(
+            user => user.id === userId
+        )
+    }
+    next()
+})
 
 app.get("/", (req, res) => {
     const { userId } = req.session;
@@ -81,16 +90,27 @@ app.get("/", (req, res) => {
     `)
 })
 
+
 app.get("/home", redirectLogin, (req, res) => {
+    // forgot to add home here lol
+    // get home
+    // test login as well
+    // there is no logout button
+    // continue watching youtube video
+    const { user } = res.locals
     res.send(`
         <h1>Home</h1>
         <a href="/">Main</a>
 
         <ul>
-            <li>Name: </li>
-            <li>Email: </li>
+            <li>Name: ${user.name}</li>
+            <li>Email: ${user.name}</li>
         </ul>
     `);
+})
+
+app.get("/profile", redirectLogin, (req, res) => {
+    const { user } = res.locals
 })
 
 app.get("/login", (req, res) => {
@@ -138,7 +158,7 @@ app.post("/register", redirectHome, (req, res) => {
     const {name, email, password} = req.body;
 
     if(name && email && password){
-        const exists = user.some(
+        const exists = users.some(
             user => user.email === email
         )
 
@@ -159,7 +179,7 @@ app.post("/register", redirectHome, (req, res) => {
     // almost throughj
     res.redirect("/register");
 })
-
+// run and test if smooth
 app.get("/logout", redirectLogin, (req, res) => {
     res.session.destroy(err => {
         if(err){
