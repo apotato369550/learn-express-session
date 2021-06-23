@@ -90,6 +90,9 @@ app.get("/", (req, res) => {
     `)
 })
 
+// TEST ALL THIS SHIT FOR ERRORS
+// cannot post logout:(())
+// test this tom
 
 app.get("/home", redirectLogin, (req, res) => {
     // forgot to add home here lol
@@ -97,20 +100,20 @@ app.get("/home", redirectLogin, (req, res) => {
     // test login as well
     // there is no logout button
     // continue watching youtube video
-    const { user } = res.locals
+    const { user } = res.locals;
     res.send(`
         <h1>Home</h1>
         <a href="/">Main</a>
 
         <ul>
             <li>Name: ${user.name}</li>
-            <li>Email: ${user.name}</li>
+            <li>Email: ${user.email}</li>
         </ul>
     `);
 })
 
 app.get("/profile", redirectLogin, (req, res) => {
-    const { user } = res.locals
+    const { user } = res.locals;
 })
 
 app.get("/login", (req, res) => {
@@ -143,7 +146,7 @@ app.post("/login", redirectHome, (req, res) => {
 
     if(email && password){
         const user = users.find(
-            user => user.email === email && user.password === pasword
+            user => user.email === email && user.password === password
         )
 
         if(user){
@@ -180,8 +183,11 @@ app.post("/register", redirectHome, (req, res) => {
     res.redirect("/register");
 })
 // run and test if smooth
-app.get("/logout", redirectLogin, (req, res) => {
-    res.session.destroy(err => {
+// double check this later
+// test this later
+app.post("/logout", redirectLogin, (req, res) => {
+    // fix destroy of undefined
+    req.session.destroy(err => {
         if(err){
             return res.redirect("/home");
         }
